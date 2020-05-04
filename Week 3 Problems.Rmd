@@ -1,0 +1,147 @@
+---
+title: "Week 3 problems"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 4.4 Questions
+##### 1. "my_varıable" does not work because there is no i in the word, it is a different symbol.
+##### 2. Fix so they run correctly:
+```{r}
+library(tidyverse)
+```
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+  * I changed "dota" to "data"
+  
+
+```{r}
+filter(mpg, cyl == 8)
+```
+
+  * I changed "fliter" to "filter" and added another =
+
+```{r}
+filter(diamonds, carat > 3)
+```
+
+  * I changed it from "diamond" to "diamonds"
+
+##### 3. When I pressed Alt + Shift + K I got a Keyboard shortcut quick reference. I can go to tools then keyboard shortcuts help. 
+
+## 5.2.4 Problems
+
+```{r}
+library(nycflights13)
+```
+
+##### 1.1 Had an arrival delay of two or more hours
+
+```{r}
+filter(flights, !(arr_delay > 120))
+```
+
+##### 1.4 Departed in summer (July, August, and September)
+
+```{r}
+filter(flights, month== 7 | month==8 | month== 9)
+```
+
+
+##### 1.5 Arrived more than two hours late, but didn’t leave late
+```{r}
+filter(flights, (arr_delay >= 2 | dep_delay ==0))
+```
+
+##### 1.7 Departed between midnight and 6am (inclusive)
+```{r}
+(d<-filter(flights, dep_time>=0, dep_time<=600))
+```
+
+
+##### 2. Another useful dplyr filtering helper is between(). What does it do? Can you use it to simplify the code needed to answer the previous challenges?
+
+* It is a shortcut to find values within a certain range, it allows you to condense the code.
+```{r}
+filter(flights, between(month, 7, 9))
+```
+
+##### 3. How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
+```{r}
+filter(flights, is.na(dep_time))
+```
+* dep_delay and arr_time are missing too.
+
+## 5.3.1 Problems
+
+##### 1. How could you use arrange() to sort all missing values to the start? (Hint: use is.na()).
+```{r}
+arrange(flights, desc(is.na(dep_time)))
+```
+
+##### 2. Sort flights to find the most delayed flights. Find the flights that left earliest.
+```{r}
+arrange(flights, desc(dep_delay))
+arrange(flights, desc(dep_time))
+```
+
+* I'm not sure if I did that right. I can't really read the charts very well.
+
+##### 3.Sort flights to find the fastest (highest speed) flights.
+* I am not sure how to do this, I tried speed, mph and I'm not sure what to do.
+
+##### 4. Which flights travelled the farthest? Which travelled the shortest?
+```{r}
+arrange(flights, dep_delay)
+arrange(flights, desc(dep_delay))
+```
+
+## 5.4.1 Problems
+
+##### 1.Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights.
+```{r}
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+select(flights,dep_time,dep_delay:arr_time,arr_delay)
+```
+
+##### 2.What happens if you include the name of a variable multiple times in a select() call?
+```{r}
+select(flights, year, month, month, day)
+```
+* it doesn't seem to effect anything. There is only 1 month column.
+
+##### 3. What does the one_of() function do? Why might it be helpful in conjunction with this vector?
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+select(flights, one_of(vars))
+```
+
+* it shows all the variables in the vector and it specifies the columns shown.
+
+##### 4. Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default? 
+
+* I didnt really know what to expect so I guess I was surprised.
+
+## 5.5.2 Problems
+
+##### 1. Currently dep_time and sched_dep_time are convenient to look at, but hard to compute with because they’re not really continuous numbers. Convert them to a more convenient representation of number of minutes since midnight.
+
+##### 2. Compare air_time with arr_time - dep_time. What do you expect to see? What do you see? What do you need to do to fix it?
+
+##### 3. Compare dep_time, sched_dep_time, and dep_delay. How would you expect those three numbers to be related?
+
+##### 4. Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Carefully read the documentation for min_rank().
+
+##### 5. What does 1:3 + 1:10 return? Why?
+
+## 5.6.7 Problems
+
+##### 5. Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n())).
+
